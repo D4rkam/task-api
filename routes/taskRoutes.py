@@ -47,6 +47,5 @@ async def delete_task(id: int):
     status_code = status.HTTP_200_OK)
 
 async def update_task(id: int, data_taks: TaskSchema):
-    connec.execute(
-        tasks.update().values(title=data_taks.title, content=data_taks.content, done=data_taks.done).where(tasks.c.id == id))
+    connec.execute(tasks.update().values(title=data_taks.title, content=data_taks.content, done=data_taks.done).where(tasks.c.id == id))
     return connec.execute(tasks.select().where(tasks.c.id == id)).first()
