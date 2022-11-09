@@ -1,1 +1,3 @@
-*__pycache__
+/__pycache__
+/task-api
+/*/__pycache__
