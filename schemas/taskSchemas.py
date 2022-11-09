@@ -6,3 +6,7 @@ class TaskSchema(BaseModel):
     title: str
     content: str
     done: bool
+
+
+
+    
