@@ -4,12 +4,12 @@ from schemas.taskSchemas import TaskSchema
 from models.taskModels import tasks
 from typing import List
 from config.db import connec
+from datetime import datetime
 
 router = APIRouter()
 
 @router.get(
     path = "/api/tasks",
-    response_model = List[TaskSchema],
     status_code = status.HTTP_200_OK)
 
 async def get_tasks():
@@ -25,11 +25,10 @@ async def get_task(id: int):
 
 @router.post(
     path = "/api/task",
-    response_model = TaskSchema,
     status_code = status.HTTP_200_OK)
 
 async def create_task(data_task: TaskSchema):
-    new_task = {"title": data_task.title, "content": data_task.content, "done": data_task.done}
+    new_task = {"title": data_task.title, "content": data_task.content, "type": data_task.type, "created": f"{data_task.created}"}
     result = connec.execute(tasks.insert().values(new_task))
     return connec.execute(tasks.select().where(tasks.c.id == result.lastrowid)).first()
 
@@ -41,14 +40,15 @@ async def delete_task(id: int):
     connec.execute(tasks.delete().where(tasks.c.id == id))
     return Response(status_code = HTTP_204_NO_CONTENT)
 
-@router.put(
+@router.patch(
     path = "/api/task/{id}",
     response_model= TaskSchema,
     status_code = status.HTTP_200_OK)
 
 async def update_task(id: int, data_taks: TaskSchema):
-    connec.execute(tasks.update().values(title=data_taks.title, content=data_taks.content, done=data_taks.done).where(tasks.c.id == id))
+    connec.execute(tasks.update().values(title=data_taks.title, content=data_taks.content, type=data_taks.type).where(tasks.c.id == id))
     return connec.execute(tasks.select().where(tasks.c.id == id)).first()
+
 
 
 
